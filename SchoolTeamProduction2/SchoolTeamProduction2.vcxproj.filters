@@ -31,6 +31,24 @@
     <Filter Include="Scene\ヘッダ ファイル">
       <UniqueIdentifier>{62042040-b5f1-4b90-9fc3-7efd0b537658}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{a7f77350-6315-4e9b-bd2c-fa54257fc540}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{4f23e280-cba7-47f3-b59e-eea71dbc9c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map\ソース ファイル">
+      <UniqueIdentifier>{d0192e50-21df-4fcd-96d6-fa08c25a7a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map\ヘッダー ファイル">
+      <UniqueIdentifier>{3f7b229f-e129-460a-b3de-2d2352cb006a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ヘッダー ファイル">
+      <UniqueIdentifier>{2c8516ed-bf98-4e07-a463-9f0f94ae5f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\ソース ファイル">
+      <UniqueIdentifier>{fc03c9bf-ffbf-46e8-aa97-b281b37002a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,6 +103,21 @@
       <Filter>DirectX関係\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="Vector.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Map\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PrototypeMap.cpp">
+      <Filter>Map\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,5 +188,27 @@
     <ClInclude Include="Vector.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Map\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="PrototypeMap.h">
+      <Filter>Map\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BasicMeshShader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="BasicMeshVS.hlsl" />
+    <FxCompile Include="BasicMeshPS.hlsl" />
   </ItemGroup>
 </Project>

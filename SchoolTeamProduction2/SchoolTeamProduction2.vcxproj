@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="Dx12_CBVSRVUAVHeap.cpp" />
     <ClCompile Include="Dx12_Device.cpp" />
     <ClCompile Include="Dx12_Mesh.cpp" />
@@ -138,9 +139,13 @@
     <ClCompile Include="Dx12_Shader.cpp" />
     <ClCompile Include="Dx12_Sprite.cpp" />
     <ClCompile Include="Dx12_Texture2D.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LoadContents.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PrototypeMap.cpp" />
     <ClCompile Include="SampleScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -151,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="CollisionMap.h" />
     <ClInclude Include="COMRelease.h" />
     <ClInclude Include="Dx12_CBuffer.h" />
     <ClInclude Include="Dx12_CBVSRVUAVHeap.h" />
@@ -162,8 +168,12 @@
     <ClInclude Include="Dx12_Sprite.h" />
     <ClInclude Include="Dx12_Texture2D.h" />
     <ClInclude Include="Dx12_VertexData.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LoadContents.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PrototypeMap.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SampleScene.h" />
     <ClInclude Include="Scene.h" />
@@ -176,6 +186,31 @@
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2017_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BasicMeshShader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="BasicMeshPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="BasicMeshVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
