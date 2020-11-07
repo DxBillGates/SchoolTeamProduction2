@@ -13,6 +13,7 @@ private:
 private:
 	Dx12_Mesh mesh;
 	Dx12_CBuffer<DirectX::XMMATRIX>* cbData;
+	bool jumpFlag;
 public:
 	Player();
 	~Player();

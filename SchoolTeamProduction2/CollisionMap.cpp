@@ -23,7 +23,7 @@ bool CollisionMap::CollisionCheckMapChipAndGameObject(GameObject & gameObject)
 	return false;
 }
 
-bool CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(GameObject & gameObject)
+bool CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(GameObject & gameObject,MapChipData chip)
 {
 	const std::vector<std::vector<int>>& refMapChip = currentMap->GetMapChipData();
 	const Vector3& mapChipSize = currentMap->GetChipSize();
@@ -38,7 +38,7 @@ bool CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(GameObject & gam
 	ty = -(int)((gameObjectPosition.y + gameObjectSize.y / 2.0f) / mapChipSize.y);
 	by = -(int)((gameObjectPosition.y + 1 - gameObjectSize.y / 2.0f) / mapChipSize.y);
 
-	if (refMapChip[by][rx] != MapChipData::AIR || refMapChip[by][lx] != MapChipData::AIR || refMapChip[ty][lx] != MapChipData::AIR || refMapChip[ty][rx] != MapChipData::AIR)
+	if (refMapChip[by][rx] != chip || refMapChip[by][lx] != chip || refMapChip[ty][lx] != chip || refMapChip[ty][rx] != chip)
 	{
 		return true;
 	}

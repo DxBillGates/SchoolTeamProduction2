@@ -16,6 +16,7 @@ enum MapChipData
 	DOWN_RIGHT_SLOPE,
 	ENEMY,
 	CHECK_POINT,
+	MAX_DATA,
 };
 
 //Šî’êƒNƒ‰ƒX

@@ -50,7 +50,6 @@ void SampleScene::Update()
 	CollisionMap::SetCurrentMap(&prototypeMap);
 	//プレイヤーの更新
 	player.Update();
-
 	//ビュー行列の更新
 	Vector3 playerPos = player.GetTransform().position;
 	eyepos = { playerPos.x,playerPos.y,-1000 };
