@@ -30,8 +30,12 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void Draw(ID3D12GraphicsCommandList* cmdList) = 0;
+	//Getter,Setter
 	Transform GetTransform();
 	Rigidbody GetRigidbody();
-	bool GetliveFlag();
+	bool GetLiveFlag();
 	Vector3 GetSize();
+	void SetTransform(const Transform& t);
+	void SetRigidbody(const Rigidbody& r);
+	void SetLiveFlag(bool b);
 };

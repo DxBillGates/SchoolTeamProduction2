@@ -120,6 +120,9 @@
     <ClCompile Include="CollisionMap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApplication.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="CollisionMap.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

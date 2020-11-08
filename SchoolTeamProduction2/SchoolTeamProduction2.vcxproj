@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="Dx12_CBVSRVUAVHeap.cpp" />
     <ClCompile Include="Dx12_Device.cpp" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="CollisionMap.h" />
     <ClInclude Include="COMRelease.h" />
     <ClInclude Include="Dx12_CBuffer.h" />

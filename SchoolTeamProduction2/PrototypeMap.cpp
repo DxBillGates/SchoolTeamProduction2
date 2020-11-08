@@ -59,6 +59,18 @@ void PrototypeMap::Draw(ID3D12GraphicsCommandList * cmdList)
 				break;
 			case MapChipData::GROUND:
 				break;
+			case MapChipData::UP_LEFT_SLOPE:
+				mapCBData[index]->Set(cmdList);
+				mapChipMesh.Draw(cmdList);
+				break;
+			case MapChipData::DOWN_LEFT_SLOPE:
+				mapCBData[index]->Set(cmdList);
+				mapChipMesh.Draw(cmdList);
+				break;
+			case MapChipData::DOWN_RIGHT_SLOPE:
+				mapCBData[index]->Set(cmdList);
+				mapChipMesh.Draw(cmdList);
+				break;
 			}
 		}
 	}

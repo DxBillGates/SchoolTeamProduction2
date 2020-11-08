@@ -26,7 +26,7 @@ Rigidbody GameObject::GetRigidbody()
 }
 
 //ê∂ë∂ÉtÉâÉOÇï‘Ç∑
-bool GameObject::GetliveFlag()
+bool GameObject::GetLiveFlag()
 {
 	return liveFlag;
 }
@@ -35,4 +35,19 @@ bool GameObject::GetliveFlag()
 Vector3 GameObject::GetSize()
 {
 	return size;
+}
+
+void GameObject::SetTransform(const Transform & t)
+{
+	transform = t;
+}
+
+void GameObject::SetRigidbody(const Rigidbody & r)
+{
+	rigidbody = r;
+}
+
+void GameObject::SetLiveFlag(bool b)
+{
+	liveFlag = b;
 }
