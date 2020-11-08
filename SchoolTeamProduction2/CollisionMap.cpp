@@ -38,7 +38,7 @@ bool CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(GameObject & gam
 	ty = -(int)((gameObjectPosition.y + gameObjectSize.y / 2.0f) / mapChipSize.y);
 	by = -(int)((gameObjectPosition.y + 1 - gameObjectSize.y / 2.0f) / mapChipSize.y);
 
-	if (refMapChip[by][rx] != chip || refMapChip[by][lx] != chip || refMapChip[ty][lx] != chip || refMapChip[ty][rx] != chip)
+	if (refMapChip[by][rx] == chip || refMapChip[by][lx] == chip || refMapChip[ty][lx] == chip || refMapChip[ty][rx] == chip)
 	{
 		return true;
 	}
