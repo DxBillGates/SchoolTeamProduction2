@@ -5,6 +5,11 @@ void CollisionMap::SetCurrentMap(Map * pMap)
 	currentMap = pMap;
 }
 
+Map * CollisionMap::GetCurrentMap()
+{
+	return currentMap;
+}
+
 bool CollisionMap::CollisionCheckMapChipAndGameObject(GameObject & gameObject)
 {
 	//ゲームオブジェクトが今いるところのマップチップのどのタイルに存在するかをチェック

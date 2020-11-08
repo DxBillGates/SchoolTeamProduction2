@@ -87,7 +87,7 @@ void Player::Update()
 	//弾が使えない状態ならキャラの座標に持ってくる
 	if (!bullet.GetLiveFlag())
 	{
-		bullet.SetTransform({ {transform.position.x,transform.position.y + 8,0 }, {}, {}});
+		bullet.SetTransform({ {transform.position.x,transform.position.y + 8,0 }, {}, {} });
 	}
 	//使える弾ならキャラの向きの方向に飛ばす
 	if (!bullet.GetLiveFlag())
