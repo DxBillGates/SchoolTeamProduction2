@@ -38,6 +38,7 @@ void SampleScene::Initialize()
 	projection2D = DirectX::XMMatrixOrthographicOffCenterLH(0, (float)gameWnd->GetWndWidth(), (float)gameWnd->GetWndHeight(), 0, 0, 1);
 	perspective->Map({ view,projection3D });
 
+	CollisionMap::SetCurrentMap(&prototypeMap);
 	//プレイヤーを初期化
 	player.Initialize();
 	//プロトタイプマップを初期化

@@ -67,7 +67,7 @@ void Bullet::Update()
 		{
 			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
 			{
-				if(rigidbody.velocity.x < 0)
+				if(rigidbody.velocity.x > 0)
 				{
 					transform.position -= rigidbody.velocity;
 					rigidbody.velocity = Vector3(-rigidbody.velocity.x, rigidbody.velocity.y, 0);
