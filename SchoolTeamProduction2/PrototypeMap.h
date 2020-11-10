@@ -7,6 +7,12 @@
 class PrototypeMap : public Map
 {
 private:
+	Dx12_Mesh upRightMesh;
+	Dx12_Mesh upLeftMesh;
+	Dx12_Mesh downRightMesh;
+	Dx12_Mesh downLeftMesh;
+	Dx12_Mesh cubeMesh;
+
 	Dx12_Mesh mapChipMesh;
 	std::vector<Dx12_CBuffer<DirectX::XMMATRIX>*> mapCBData;
 public:

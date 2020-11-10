@@ -36,6 +36,23 @@ void PrototypeMap::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, L
 	MeshData mapChipMeshData = {};
 	loader->CreateModelData_Plane(size.x, size.y, mapChipMeshData);
 	mapChipMesh.Create(device, &mapChipMeshData);
+
+	MeshData urData = {};
+	loader->LoadMeshData("Resources/Model/", "UP_RIGHT_BLOCK",urData);
+	upRightMesh.Create(device, &urData);
+	MeshData ulData = {};
+	loader->LoadMeshData("Resources/Model/", "UP_LEFT_BLOCK", ulData);
+	upLeftMesh.Create(device, &ulData);
+	MeshData drData = {};
+	loader->LoadMeshData("Resources/Model/", "DOWN_RIGHT_BLOCK", drData);
+	downRightMesh.Create(device, &drData);
+	MeshData dlData = {};
+	loader->LoadMeshData("Resources/Model/", "DOWN_LEFT_BLOCK", dlData);
+	downLeftMesh.Create(device, &dlData);
+	MeshData cubeData = {};
+	loader->LoadMeshData("Resources/Model/", "CUBE", cubeData);
+	cubeMesh.Create(device, &cubeData);
+
 }
 
 void PrototypeMap::Initialize()
@@ -55,21 +72,25 @@ void PrototypeMap::Draw(ID3D12GraphicsCommandList * cmdList)
 				break;
 			case MapChipData::GLASS:
 				mapCBData[index]->Set(cmdList);
-				mapChipMesh.Draw(cmdList);
+				cubeMesh.Draw(cmdList);
 				break;
 			case MapChipData::GROUND:
 				break;
 			case MapChipData::UP_LEFT_SLOPE:
 				mapCBData[index]->Set(cmdList);
-				mapChipMesh.Draw(cmdList);
+				upRightMesh.Draw(cmdList);
+				break;
+			case MapChipData::UP_RIGHT_SLOPE:
+				mapCBData[index]->Set(cmdList);
+				upLeftMesh.Draw(cmdList);
 				break;
 			case MapChipData::DOWN_LEFT_SLOPE:
 				mapCBData[index]->Set(cmdList);
-				mapChipMesh.Draw(cmdList);
+				downRightMesh.Draw(cmdList);
 				break;
 			case MapChipData::DOWN_RIGHT_SLOPE:
 				mapCBData[index]->Set(cmdList);
-				mapChipMesh.Draw(cmdList);
+				downLeftMesh.Draw(cmdList);
 				break;
 			}
 		}

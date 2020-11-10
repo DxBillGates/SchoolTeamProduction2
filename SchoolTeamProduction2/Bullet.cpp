@@ -48,37 +48,33 @@ void Bullet::Update()
 		{
 			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64 + 63, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f + 63.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
 			{
-				if (rigidbody.velocity.x < 0)
+				transform.position -= rigidbody.velocity;
+				if (rigidbody.velocity.x > 0 || rigidbody.velocity.y < 0)
 				{
-					transform.position -= rigidbody.velocity;
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, rigidbody.velocity.y, 0);
-					++hitCount;
+					rigidbody.velocity = Vector3(rigidbody.velocity.y, rigidbody.velocity.x, 0);
 				}
 				else
 				{
-					transform.position -= rigidbody.velocity;
-					rigidbody.velocity = Vector3(rigidbody.velocity.y, rigidbody.velocity.x, 0);
-					++hitCount;
+					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
 				}
+				++hitCount;
 			}
 		}
-		//‰E‰ºŒü‚«‚ÌŽÎ–Ê‚Æ‚Ì“–‚½‚è”»’è
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
+		//‰EãŒü‚«‚ÌŽÎ–Ê‚Æ‚Ì“–‚½‚è”»’è
+		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
 		{
-			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
+			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f + 63.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
 			{
-				if(rigidbody.velocity.x > 0)
+				transform.position -= rigidbody.velocity;
+				if (rigidbody.velocity.x < 0 || rigidbody.velocity.y < 0)
 				{
-					transform.position -= rigidbody.velocity;
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, rigidbody.velocity.y, 0);
-					++hitCount;
+					rigidbody.velocity = Vector3(-rigidbody.velocity.y, -rigidbody.velocity.x, 0);
 				}
 				else
 				{
-					transform.position -= rigidbody.velocity;
-					rigidbody.velocity = Vector3(rigidbody.velocity.y, rigidbody.velocity.x, 0);
-					++hitCount;
+					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
 				}
+				++hitCount;
 			}
 		}
 		//¶‰ºŒü‚«ŽÎ–Ê‚Æ‚Ì“–‚½‚è”»’è
@@ -86,18 +82,33 @@ void Bullet::Update()
 		{
 			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
 			{
-				if (rigidbody.velocity.x < 0)
+				transform.position -= rigidbody.velocity;
+				if (rigidbody.velocity.x > 0 || rigidbody.velocity.y > 0)
 				{
-					transform.position -= rigidbody.velocity;
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, rigidbody.velocity.y, 0);
-					++hitCount;
+					rigidbody.velocity = Vector3(-rigidbody.velocity.y, -rigidbody.velocity.x, 0);
 				}
 				else
 				{
-					transform.position -= rigidbody.velocity;
-					rigidbody.velocity = Vector3(-rigidbody.velocity.y, -rigidbody.velocity.x, 0);
-					++hitCount;
+					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
 				}
+				++hitCount;
+			}
+		}
+		//‰E‰ºŒü‚«‚ÌŽÎ–Ê‚Æ‚Ì“–‚½‚è”»’è
+		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
+		{
+			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
+			{
+				transform.position -= rigidbody.velocity;
+				if (rigidbody.velocity.x < 0 || rigidbody.velocity.y > 0)
+				{
+					rigidbody.velocity = Vector3(rigidbody.velocity.y, rigidbody.velocity.x, 0);
+				}
+				else
+				{
+					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
+				}
+				++hitCount;
 			}
 		}
 	}

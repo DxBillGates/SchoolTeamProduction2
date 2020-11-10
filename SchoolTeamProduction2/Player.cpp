@@ -113,7 +113,7 @@ void Player::Update()
 		if (direction)bullet.SetRigidbody({ Vector3(16,0,0) });
 		else bullet.SetRigidbody({ Vector3(-16,0,0) });
 	}
-	const int MAX_HIT_COUNT = 10;
+	const int MAX_HIT_COUNT = 20;
 	if (bullet.GetHitCount() == MAX_HIT_COUNT)
 	{
 		bullet.SetTransform({ transform.position,{},{} });
