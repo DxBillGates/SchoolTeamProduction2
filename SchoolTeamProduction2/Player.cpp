@@ -28,26 +28,11 @@ void Player::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadCon
 void Player::Initialize()
 {
 	bullet.Initialize();
-	transform.position = Vector3(96, -96, 0);
 	jumpFlag = false;
 	direction = true;
 
-	//現在のマップからプレイヤーの初期位置を確保し番号をAIRに置き換える
-	const std::vector<std::vector<int>>& refMapData = CollisionMap::GetCurrentMap()->GetMapChipData();
-	int x = 0, y = 0;
-	for (int i = 0; i < refMapData.size(); ++i)
-	{
-		for (int j = 0; j < refMapData[0].size(); ++j)
-		{
-			if (refMapData[i][j] == 9)
-			{
-				x = j;
-				y = i;
-				CollisionMap::GetCurrentMap()->SetMapChip(x, y, AIR);
-			}
-		}
-	}
-	transform.position = Vector3(x * size.x + 32.0f, -(y * size.y + 32.0f), 0);
+	Vector2 pos = CollisionMap::GetCurrentMap()->GetPlayerChip();
+	transform.position = Vector3(pos.x * size.x + 32.0f, -(pos.y * size.y + 32.0f), 0);
 }
 
 void Player::Update()

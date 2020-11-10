@@ -53,8 +53,8 @@ void SampleScene::Update()
 	player.Update();
 	//ビュー行列の更新
 	Vector3 playerPos = player.GetTransform().position;
-	eyepos = { playerPos.x,playerPos.y,-1000 };
-	target = { playerPos.x,playerPos.y,playerPos.z };
+	eyepos = { playerPos.x,-360,-1000 };
+	target = { 640,-320,0 };
 	view = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&eyepos), DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&up));
 	perspective->Map({ view,projection3D });
 }

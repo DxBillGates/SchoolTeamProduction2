@@ -16,13 +16,15 @@ enum MapChipData
 	DOWN_RIGHT_SLOPE,
 	ENEMY,
 	CHECK_POINT,
-	MAX_DATA,
+	PLAYER,
 };
 
 //基底クラス
 class Map
 {
 protected:
+	Vector2 playerChip;
+	std::vector<Vector2> enemiesChip;
 	//マップチップデータ
 	std::vector<std::vector<int>> mapChipData;
 	Vector3 size;
@@ -36,6 +38,8 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Draw(ID3D12GraphicsCommandList* cmdList) = 0;
 	//Getter、Setter
+	Vector2 GetPlayerChip();
+	std::vector<Vector2> GetEnemiesChip();
 	std::vector<std::vector<int>>* GetMapChipPointer();    //マップチップのポインタを返す
 	std::vector<std::vector<int>> GetMapChipData();    //マップチップのデータを返す
 	Vector3 GetChipSize();    //チップ一つのサイズを返す
