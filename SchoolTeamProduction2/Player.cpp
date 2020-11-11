@@ -95,10 +95,10 @@ void Player::Update()
 	if (!bullet.GetLiveFlag())
 	{
 		bullet.SetLiveFlag(true);
-		if (direction)bullet.SetRigidbody({ Vector3(16,0,0) });
-		else bullet.SetRigidbody({ Vector3(-16,0,0) });
+		if (direction)bullet.SetRigidbody({ Vector3(16,2,0) });
+		else bullet.SetRigidbody({ Vector3(-2,16,0) });
 	}
-	const int MAX_HIT_COUNT = 20;
+	const int MAX_HIT_COUNT = 40;
 	if (bullet.GetHitCount() == MAX_HIT_COUNT)
 	{
 		bullet.SetTransform({ transform.position,{},{} });
