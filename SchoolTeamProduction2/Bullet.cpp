@@ -23,9 +23,12 @@ void Bullet::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadCon
 
 void Bullet::Initialize()
 {
-	hitCount = 0;
+	transform = {};
+	rigidbody = {};
+	liveFlag = false;
 	liveFlag = false;
 	objectTime = 1.0f;
+	hitCount = 0;
 }
 
 void Bullet::Update()
@@ -48,14 +51,17 @@ void Bullet::Update()
 				newVelocity.x = -rigidbody.velocity.x;
 				++hitCountNowFrame;
 			}
+			//左上向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
 			{
+				//チップ内にいるならチップにあった三角形の頂点を計算し、三角形と弾(点)で当たり判定を取る
 				Vector3 a, b, c;
 				a = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
 				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y + hitChipSize.y), 0);
 				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
 				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
 				{
+					//当たっていたなら速度ベクトルから反射ベクトルを作る
 					if (rigidbody.velocity.x > 0)
 					{
 						if (rigidbody.velocity.y > 0)
@@ -77,6 +83,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+			//右上向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
 			{
 				Vector3 a, b, c;
@@ -106,6 +113,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+			//左下向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
 			{
 				Vector3 a, b, c;
@@ -135,6 +143,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+			//右下向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
 			{
 				Vector3 a, b, c;
@@ -178,14 +187,17 @@ void Bullet::Update()
 				newVelocity.y = -rigidbody.velocity.y;
 				++hitCountNowFrame;
 			}
+			//左上向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
 			{
+				//チップ内にいるならチップにあった三角形の頂点を計算し、三角形と弾(点)で当たり判定を取る
 				Vector3 a, b, c;
 				a = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
 				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y + hitChipSize.y), 0);
 				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
 				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
 				{
+					//当たっていたなら速度ベクトルから反射ベクトルを作る
 					if (rigidbody.velocity.y > 0)
 					{
 						newVelocity.y = -rigidbody.velocity.y;
@@ -207,6 +219,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+			//右上向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
 			{
 				Vector3 a, b, c;
@@ -236,6 +249,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+			//左下向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
 			{
 				Vector3 a, b, c;
@@ -265,6 +279,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+			//右下向きチップとの当たり判定
 			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
 			{
 				Vector3 a, b, c;
@@ -296,11 +311,11 @@ void Bullet::Update()
 			}
 		}
 
+		//現在フレームでのヒットカウントが1以上ならヒット数を1増やす
 		if (hitCountNowFrame > 0)
 		{
 			++hitCount;
 		}
-		printf("%d\n", hitCount);
 
 		//速度ベクトルの更新
 		rigidbody.velocity = newVelocity;

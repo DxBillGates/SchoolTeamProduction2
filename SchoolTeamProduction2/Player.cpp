@@ -3,7 +3,8 @@
 
 Player::Player()
 	:
-	jumpFlag(false)
+	jumpFlag(false),
+	direction(true)
 {
 	size = Vector3(64, 64, 0);
 }

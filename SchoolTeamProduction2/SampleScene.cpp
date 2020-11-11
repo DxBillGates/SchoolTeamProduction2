@@ -64,7 +64,6 @@ void SampleScene::Update()
 	{
 		Initialize();
 	}
-	//player.SetObjectTime(sceneTime);
 	GameObject* p = player.GetBullet();
 	p->SetObjectTime(sceneTime);
 	//当たり判定を行うマップをセット
