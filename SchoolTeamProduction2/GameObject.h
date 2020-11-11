@@ -23,6 +23,7 @@ protected:
 	Rigidbody rigidbody;
 	bool liveFlag;
 	Vector3 size;
+	float objectTime;
 public:
 	GameObject();
 	virtual ~GameObject();
@@ -35,7 +36,9 @@ public:
 	Rigidbody GetRigidbody();
 	bool GetLiveFlag();
 	Vector3 GetSize();
+	float GetObjectTime();
 	void SetTransform(const Transform& t);
 	void SetRigidbody(const Rigidbody& r);
 	void SetLiveFlag(bool b);
+	void SetObjectTime(float time);
 };

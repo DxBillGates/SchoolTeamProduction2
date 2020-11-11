@@ -43,20 +43,41 @@ void SampleScene::Initialize()
 	player.Initialize();
 	//プロトタイプマップを初期化
 	prototypeMap.Initialize();
+	sceneTime = 0.25f;
 }
 
 void SampleScene::Update()
 {
+	if (keyboard->CheakHitKey(Key::UP))
+	{
+		sceneTime += 0.01f;
+	}
+	if (keyboard->CheakHitKey(Key::DOWN))
+	{
+		sceneTime -= 0.01f;
+	}
+	if (sceneTime <= 0)
+	{
+		sceneTime = 0.01f;
+	}
+	if (keyboard->CheakHitKey(Key::I))
+	{
+		Initialize();
+	}
+	//player.SetObjectTime(sceneTime);
+	GameObject* p = player.GetBullet();
+	p->SetObjectTime(sceneTime);
 	//当たり判定を行うマップをセット
 	CollisionMap::SetCurrentMap(&prototypeMap);
 	//プレイヤーの更新
 	player.Update();
 	//ビュー行列の更新
-	Vector3 playerPos = player.GetTransform().position;
-	eyepos = { playerPos.x,-360,-1000 };
-	target = { 640,-320,0 };
+	Vector3 playerPos = player.GetBullet()->GetTransform().position;
+	eyepos = { playerPos.x,playerPos.y,-1000 };
+	target = { playerPos.x,playerPos.y,0 };
 	view = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&eyepos), DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&up));
 	perspective->Map({ view,projection3D });
+	//printf("シーンの固有時間 : %f\n", sceneTime);
 }
 
 void SampleScene::DrawSprite()
@@ -65,6 +86,7 @@ void SampleScene::DrawSprite()
 
 void SampleScene::Draw()
 {
+
 	//シェーダーのセット
 	basicMeshShader->Set(device->GetCmdList());
 	//VP行列のセット

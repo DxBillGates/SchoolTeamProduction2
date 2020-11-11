@@ -5,7 +5,8 @@ GameObject::GameObject()
 	transform({}),
 	rigidbody({}),
 	liveFlag(true),
-	size({})
+	size({}),
+	objectTime(1)
 {
 }
 
@@ -37,6 +38,11 @@ Vector3 GameObject::GetSize()
 	return size;
 }
 
+float GameObject::GetObjectTime()
+{
+	return objectTime;
+}
+
 void GameObject::SetTransform(const Transform & t)
 {
 	transform = t;
@@ -50,4 +56,9 @@ void GameObject::SetRigidbody(const Rigidbody & r)
 void GameObject::SetLiveFlag(bool b)
 {
 	liveFlag = b;
+}
+
+void GameObject::SetObjectTime(float time)
+{
+	objectTime = time;
 }

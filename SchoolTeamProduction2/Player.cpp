@@ -33,13 +33,14 @@ void Player::Initialize()
 
 	Vector2 pos = CollisionMap::GetCurrentMap()->GetPlayerChip();
 	transform.position = Vector3(pos.x * size.x + 32.0f, -(pos.y * size.y + 32.0f), 0);
+	objectTime = 1.0f;
 }
 
 void Player::Update()
 {
-	const float G = 0.8f;    //重力
-	const float JUMP_POWER = 16;    //ジャンプ力
-	const float MOVE_POWER = 8;    //移動量
+	float G = 0.8f;    //重力
+	float JUMP_POWER = 16;    //ジャンプ力
+	float MOVE_POWER = 8;    //移動量
 
 	rigidbody.velocity.x = 0;
 	if (keyboard->CheakHitKey(Key::A))
@@ -65,21 +66,21 @@ void Player::Update()
 	}
 	//x軸に移動量を加算し一度判定
 	//当たっていたら加算をなかったことにする
-	transform.position.x += rigidbody.velocity.x;
+	transform.position.x += rigidbody.velocity.x * objectTime;
 	if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this))
 	{
-		transform.position.x -= rigidbody.velocity.x;
+		transform.position.x -= rigidbody.velocity.x * objectTime;
 		rigidbody.velocity.x = 0;
 	}
 
 	//速度ベクトルに重力を加算
-	rigidbody.velocity.y -= G;
+	rigidbody.velocity.y -= G * objectTime;
 	//y軸に移動量を加算しもう一度判定
 	//当たっていたら加算をなかったことにする
-	transform.position.y += rigidbody.velocity.y;
+	transform.position.y += rigidbody.velocity.y * objectTime;
 	if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this))
 	{
-		transform.position.y -= rigidbody.velocity.y;
+		transform.position.y -= rigidbody.velocity.y * objectTime;
 		if (jumpFlag && rigidbody.velocity.y < 0)
 		{
 			jumpFlag = false;
@@ -95,8 +96,8 @@ void Player::Update()
 	if (!bullet.GetLiveFlag())
 	{
 		bullet.SetLiveFlag(true);
-		if (direction)bullet.SetRigidbody({ Vector3(16,2,0) });
-		else bullet.SetRigidbody({ Vector3(-2,16,0) });
+		if (direction)bullet.SetRigidbody({ Vector3(16.0f,8,0) });
+		else bullet.SetRigidbody({ Vector3(-2.5f,8,0) });
 	}
 	const int MAX_HIT_COUNT = 40;
 	if (bullet.GetHitCount() == MAX_HIT_COUNT)
@@ -121,4 +122,9 @@ void Player::SetInputDevice(Keyboard * pKeyboard, Xinput * pCtrler)
 {
 	keyboard = pKeyboard;
 	ctrler = pCtrler;
+}
+
+GameObject * Player::GetBullet()
+{
+	return &bullet;
 }

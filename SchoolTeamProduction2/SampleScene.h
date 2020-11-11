@@ -24,6 +24,7 @@ private:
 private:
 	Player player;
 	PrototypeMap prototypeMap;
+	float sceneTime;
 public:
 	SampleScene();
 	~SampleScene();

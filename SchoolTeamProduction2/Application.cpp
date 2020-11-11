@@ -57,7 +57,7 @@ bool Application::Run()
 		}
 		timeStart = timeEnd;
 		fps = 1.0f / frameTime;
-		printf("%3.3f\n", fps);
+		//printf("%3.3f\n", fps);
 		if (!Update())
 		{
 			break;

@@ -11,6 +11,7 @@ public:
 	static bool CollisionCheckMapChipAndGameObject(GameObject& gameObject);    //ゲームオブジェクトがいるマップチップのタイルを判定し単純な当たり判定を行う
 	static bool CollisionCheckMapChipAndGameObjectFourCorner(GameObject& gameObject, MapChipData chip = GLASS);    //ゲームオブジェクトの四隅とチップを判定しどこが当たっているかを返す
 	static bool CollisionCheckMapChipAndGameObjectFourCorner(GameObject& gameObject, MapChipData chip,std::vector<int>& m);
+	static bool CollisionCheckMapChipAndGameObjectFourCorner(GameObject& gameObject, MapChipData chip,Vector2& v);
 	static bool CollisionCheckTriangleAndGameObject(GameObject& gameObject, Vector3 a, Vector3 b, Vector3 c);
 };
 

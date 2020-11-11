@@ -25,4 +25,5 @@ public:
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void SetInputDevice(Keyboard* pKeyboard, Xinput* pCtrler);
+	GameObject* GetBullet();
 };

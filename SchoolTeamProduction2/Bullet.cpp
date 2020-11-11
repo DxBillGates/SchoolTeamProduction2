@@ -5,7 +5,7 @@ Bullet::Bullet()
 	:
 	hitCount(0)
 {
-	size = Vector3(16, 16, 0);
+	size = Vector3(4, 4, 0);
 }
 
 Bullet::~Bullet()
@@ -25,196 +25,285 @@ void Bullet::Initialize()
 {
 	hitCount = 0;
 	liveFlag = false;
+	objectTime = 1.0f;
 }
 
 void Bullet::Update()
 {
 	if (liveFlag)
 	{
-		transform.position.x += rigidbody.velocity.x;
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this))
+		int hitCountNowFrame = 0;
+		Vector3 newVelocity = rigidbody.velocity;    //軸ごとに当たり判定をした結果の次フレーム用の速度ベクトル
+		Vector2 hitChip;
+		const Vector2& hitChipSize = { CollisionMap::GetCurrentMap()->GetChipSize().x,CollisionMap::GetCurrentMap()->GetChipSize().y };
+		//x軸判定
+		transform.position.x += rigidbody.velocity.x * objectTime;
+		//0番マップチップ意外と当たっているか確認
+		if (!CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::AIR))
 		{
-			transform.position.x -= rigidbody.velocity.x;
-			rigidbody.velocity = Vector3(-rigidbody.velocity.x, rigidbody.velocity.y, 0);
+			//1番チップと当たっている場合はベクトルを反転させる
+			if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
+			{
+				transform.position.x -= rigidbody.velocity.x * objectTime;
+				newVelocity.x = -rigidbody.velocity.x;
+				++hitCountNowFrame;
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.x > 0)
+					{
+						if (rigidbody.velocity.y > 0)
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+					}
+					else
+					{
+						newVelocity.x = -rigidbody.velocity.x;
+					}
+					transform.position.x -= rigidbody.velocity.x * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.x > 0)
+					{
+						newVelocity.x = -rigidbody.velocity.x;
+					}
+					else
+					{
+						if (rigidbody.velocity.y > 0)
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+					}
+					transform.position.x -= rigidbody.velocity.x * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.x > 0)
+					{
+						if (rigidbody.velocity.y > 0)
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = -rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = -rigidbody.velocity.x;
+						}
+					}
+					else
+					{
+						newVelocity.x = -rigidbody.velocity.x;
+					}
+					transform.position.x -= rigidbody.velocity.x * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.x > 0)
+					{
+						newVelocity.x = -rigidbody.velocity.x;
+					}
+					else
+					{
+						if (rigidbody.velocity.y > 0)
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+					}
+					transform.position.x -= rigidbody.velocity.x * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+		}
+
+		//y軸判定
+		transform.position.y += rigidbody.velocity.y * objectTime;
+		//0番マップチップ意外と当たっているか確認
+		if (!CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::AIR))
+		{
+			//1番チップと当たっている場合はベクトルを反転させる
+			if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
+			{
+				transform.position.y -= rigidbody.velocity.y * objectTime;
+				newVelocity.y = -rigidbody.velocity.y;
+				++hitCountNowFrame;
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.y > 0)
+					{
+						newVelocity.y = -rigidbody.velocity.y;
+					}
+					else
+					{
+						if (rigidbody.velocity.x > 0)
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = -rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+					}
+					transform.position.y -= rigidbody.velocity.y * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.y > 0)
+					{
+						newVelocity.y = -rigidbody.velocity.y;
+					}
+					else
+					{
+						if (rigidbody.velocity.x > 0)
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = -rigidbody.velocity.x;
+						}
+					}
+					transform.position.y -= rigidbody.velocity.y * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.y > 0)
+					{
+						if (rigidbody.velocity.x > 0)
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = -rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = -rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+					}
+					else
+					{
+						newVelocity.y = -rigidbody.velocity.y;
+					}
+					transform.position.y -= rigidbody.velocity.y * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+			else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
+			{
+				Vector3 a, b, c;
+				a = Vector3((float)hitChip.x * hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				b = Vector3((float)hitChip.x * hitChipSize.x + hitChipSize.x, -((float)hitChip.y * hitChipSize.y), 0);
+				c = Vector3((float)hitChip.x * hitChipSize.x, -(float)(hitChip.y * hitChipSize.y + hitChipSize.y), 0);
+				if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
+				{
+					if (rigidbody.velocity.y > 0)
+					{
+						if (rigidbody.velocity.x > 0)
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = rigidbody.velocity.x;
+						}
+						else
+						{
+							newVelocity.x = rigidbody.velocity.y;
+							newVelocity.y = -rigidbody.velocity.x;
+						}
+					}
+					else
+					{
+						newVelocity.y = -rigidbody.velocity.y;
+					}
+					transform.position.y -= rigidbody.velocity.y * objectTime;
+					++hitCountNowFrame;
+				}
+			}
+		}
+
+		if (hitCountNowFrame > 0)
+		{
 			++hitCount;
 		}
-		transform.position.y += rigidbody.velocity.y;
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this))
-		{
-			transform.position.y -= rigidbody.velocity.y;
-			rigidbody.velocity = Vector3(rigidbody.velocity.x, -rigidbody.velocity.y, 0);
-			++hitCount;
-		}
-		//ヒットしたチップの場所を格納
-		std::vector<int> hitChip;
-		//左上向きの斜面との当たり判定
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
-		{
-			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64 + 63, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 64.0f, -((float)hitChip[1] * 64.0f + 64.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
-			{
-				transform.position -= rigidbody.velocity;
-				if (rigidbody.velocity.x > 0 || rigidbody.velocity.y < 0)
-				{
-					rigidbody.velocity = Vector3(rigidbody.velocity.y, rigidbody.velocity.x, 0);
-				}
-				else
-				{
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
-				}
-				++hitCount;
-			}
-		}
-		//右上向きの斜面との当たり判定
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
-		{
-			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 60, -((float)hitChip[1] * 60.0f), 0), Vector3((float)hitChip[0] * 68.0f + 68.0f, -((float)hitChip[1] * 68.0f + 68.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 64.0f), 0)))
-			{
-				transform.position -= rigidbody.velocity;
-				if (rigidbody.velocity.x < 0 || rigidbody.velocity.y < 0)
-				{
-					rigidbody.velocity = Vector3(-rigidbody.velocity.y, -rigidbody.velocity.x, 0);
-				}
-				else
-				{
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
-				}
-				++hitCount;
-			}
-		}
-		//左下向き斜面との当たり判定
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
-		{
-			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
-			{
-				transform.position -= rigidbody.velocity;
-				if (rigidbody.velocity.x > 0 || rigidbody.velocity.y > 0)
-				{
-					rigidbody.velocity = Vector3(-rigidbody.velocity.y, -rigidbody.velocity.x, 0);
-				}
-				else
-				{
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
-				}
-				++hitCount;
-			}
-		}
-		//右下向きの斜面との当たり判定
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
-		{
-			if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, Vector3((float)hitChip[0] * 64, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f + 63.0f, -((float)hitChip[1] * 64.0f), 0), Vector3((float)hitChip[0] * 64.0f, -(float)(hitChip[1] * 64.0f + 63.0f), 0)))
-			{
-				transform.position -= rigidbody.velocity;
-				if (rigidbody.velocity.x < 0 || rigidbody.velocity.y > 0)
-				{
-					rigidbody.velocity = Vector3(rigidbody.velocity.y, rigidbody.velocity.x, 0);
-				}
-				else
-				{
-					rigidbody.velocity = Vector3(-rigidbody.velocity.x, -rigidbody.velocity.y, 0);
-				}
-				++hitCount;
-			}
-		}
+		printf("%d\n", hitCount);
 
-		//int hitCountNowFrame = 0;
-		//Vector3 oldVelocity = rigidbody.velocity;
-		//Vector3 newVelocity = oldVelocity;
-		////軸ごとに当たり判定を取る
-		////x軸判定
-		//transform.position.x += rigidbody.velocity.x;
-		//if (!CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::AIR))
-		//{
-		//	std::vector<int> hitChip;
-		//	//ブロックごとに当たり判定を取る
-		//	if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
-		//	{
-		//		newVelocity.x = -rigidbody.velocity.x;
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
-		//	{
-
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
-		//	{
-		//		Vector3 a, b, c;
-		//		const Vector3& chipSize = CollisionMap::GetCurrentMap()->GetChipSize();
-		//		a = Vector3((float)hitChip[0] * chipSize.x, -((float)hitChip[1] * chipSize.y), 0);
-		//		b = Vector3((float)hitChip[0] * chipSize.x + chipSize.x, -((float)hitChip[1] * chipSize.y + chipSize.y-1), 0);
-		//		c = Vector3((float)hitChip[0] * chipSize.x, -(float)(hitChip[1] * chipSize.y + chipSize.y-1), 0);
-		//		if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
-		//		{
-		//			if (rigidbody.velocity.x < 0)
-		//			{
-		//				newVelocity.x = -rigidbody.velocity.y;
-		//				newVelocity.y = -rigidbody.velocity.x;
-		//			}
-		//			else
-		//			{
-		//				newVelocity.x = -rigidbody.velocity.x;
-		//			}
-		//		}
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
-		//	{
-
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
-		//	{
-
-		//	}
-		//	//当たっているので速度ベクトルの加算をなかったことにする
-		//	transform.position.x -= oldVelocity.x;
-		//	++hitCountNowFrame;
-		//}
-		////y軸判定
-		//transform.position.y += rigidbody.velocity.y;
-		//if (!CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::AIR))
-		//{
-		//	std::vector<int> hitChip;
-		//	if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
-		//	{
-		//		newVelocity.y = -rigidbody.velocity.y;
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_LEFT_SLOPE, hitChip))
-		//	{
-
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::UP_RIGHT_SLOPE, hitChip))
-		//	{
-		//		Vector3 a, b, c;
-		//		const Vector3& chipSize = CollisionMap::GetCurrentMap()->GetChipSize();
-		//		a = Vector3((float)hitChip[0] * chipSize.x, -((float)hitChip[1] * chipSize.y), 0);
-		//		b = Vector3((float)hitChip[0] * chipSize.x + chipSize.x, -((float)hitChip[1] * chipSize.y + chipSize.y - 1), 0);
-		//		c = Vector3((float)hitChip[0] * chipSize.x, -(float)(hitChip[1] * chipSize.y + chipSize.y - 1), 0);
-		//		if (CollisionMap::CollisionCheckTriangleAndGameObject(*this, a, b, c))
-		//		{
-		//			if (rigidbody.velocity.y < 0)
-		//			{
-		//				newVelocity.x = -rigidbody.velocity.y;
-		//			}
-		//			else
-		//			{
-		//				newVelocity.y = -rigidbody.velocity.y;
-		//			}
-		//		}
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_LEFT_SLOPE, hitChip))
-		//	{
-
-		//	}
-		//	else if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::DOWN_RIGHT_SLOPE, hitChip))
-		//	{
-
-		//	}
-		//	transform.position.y -= oldVelocity.y;
-		//	++hitCountNowFrame;
-		//}
-
-		//rigidbody.velocity = newVelocity;
-		//if (hitCountNowFrame > 0)
-		//{
-		//	++hitCount;
-		//}
+		//速度ベクトルの更新
+		rigidbody.velocity = newVelocity;
 	}
 }
 
