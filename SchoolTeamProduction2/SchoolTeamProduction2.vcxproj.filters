@@ -123,6 +123,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>GameObject\ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApplication.h">
@@ -209,12 +212,18 @@
     <ClInclude Include="Bullet.h">
       <Filter>GameObject\ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicMeshShader.hlsli" />
+    <None Include="ParticleShader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicMeshVS.hlsl" />
     <FxCompile Include="BasicMeshPS.hlsl" />
+    <FxCompile Include="ParticleVS.hlsl" />
+    <FxCompile Include="ParticlePS.hlsl" />
   </ItemGroup>
 </Project>

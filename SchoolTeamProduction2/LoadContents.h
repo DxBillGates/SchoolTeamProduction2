@@ -15,7 +15,7 @@ struct MaterialData
 {
 	std::string name;
 	std::string textureName;
-	Dx12_Texture2D* texture;
+	Dx12_Texture2D* texture = nullptr;
 	Material material;
 	~MaterialData()
 	{

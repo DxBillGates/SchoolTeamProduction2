@@ -41,6 +41,11 @@ void Map::LoadMap(const char * fileName)
 				playerChip = Vector2((float)mapChipData[lineNumber].size() - 1, (float)lineNumber);
 				mapChipData[lineNumber][mapChipData[lineNumber].size() - 1] = AIR;
 			}
+			else if (number == (int)MOVE_ENEMY)
+			{
+				enemiesChip2.push_back(Vector2((float)mapChipData[lineNumber].size() - 1, (float)lineNumber));
+				mapChipData[lineNumber][mapChipData[lineNumber].size() - 1] = AIR;
+			}
 		}
 		++lineNumber;
 	}
@@ -54,6 +59,11 @@ Vector2 Map::GetPlayerChip()
 std::vector<Vector2> Map::GetEnemiesChip()
 {
 	return enemiesChip;
+}
+
+std::vector<Vector2> Map::GetMoveEnemiesChip()
+{
+	return enemiesChip2;
 }
 
 std::vector<std::vector<int>>* Map::GetMapChipPointer()

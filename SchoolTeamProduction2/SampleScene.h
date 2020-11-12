@@ -3,6 +3,7 @@
 #include "Dx12_Pipeline.h"
 #include "Player.h"
 #include "PrototypeMap.h"
+#include "Particle.h"
 
 struct PerMatrix
 {
@@ -14,6 +15,7 @@ class SampleScene : public Scene
 {
 private:
 	Dx12_Pipeline* basicMeshShader;
+	Dx12_Pipeline* particleShader;
 	DirectX::XMFLOAT3 eyepos;
 	DirectX::XMFLOAT3 target;
 	DirectX::XMFLOAT3 up;
@@ -24,6 +26,7 @@ private:
 private:
 	Player player;
 	PrototypeMap prototypeMap;
+	Particle particle;
 	float sceneTime;
 public:
 	SampleScene();
