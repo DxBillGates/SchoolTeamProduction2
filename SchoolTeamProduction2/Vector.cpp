@@ -1,4 +1,5 @@
 #include "Vector.h"
+#include <math.h>
 
 Vector2::Vector2() :x(0), y(0)
 {
@@ -6,6 +7,43 @@ Vector2::Vector2() :x(0), y(0)
 
 Vector2::Vector2(float x, float y) : x(x), y(y)
 {
+}
+
+float Vector2::Length()
+{
+	return sqrtf(x * x + y * y);
+}
+
+Vector2 Vector2::Normalize()
+{
+	return *this / Length();
+}
+
+float Vector2::Distance(const Vector2 & v1, const Vector2 & v2)
+{
+	Vector2 v = v1 - v2;
+	return v.Length();
+}
+
+Vector2 Vector2::Normalize(const Vector2 & v)
+{
+	Vector2 v1 = v;
+	return v1 / v1.Length();
+}
+
+float Vector2::Cross(const Vector2 & v1, const Vector2 & v2)
+{
+	return v1.x * v2.y - v1.y * v2.x;
+}
+
+float Vector2::Dot(const Vector2 & v1, const Vector2 & v2)
+{
+	return v1.x * v2.x + v1.y * v2.y;
+}
+
+Vector2 Vector2::Lerp(const Vector2 & s, const Vector2 & e, float t)
+{
+	return s * (1.0f - t) + e * t;
 }
 
 Vector2 Vector2::operator+()
@@ -88,6 +126,45 @@ Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z)
 {
 }
 
+float Vector3::Length()
+{
+	return sqrtf(x * x + y * y + z * z);
+}
+
+Vector3 Vector3::Normalize()
+{
+	return *this / Length();
+}
+
+float Vector3::Distance(const Vector3 & v1, const Vector3 & v2)
+{
+	Vector3 v = v1 - v2;
+	return v.Length();;
+}
+
+Vector3 Vector3::Normalize(const Vector3 & v)
+{
+	Vector3 v1 = v;
+	return v1 / v1.Length();
+}
+
+Vector3 Vector3::Cross(const Vector3 & v1, const Vector3 & v2)
+{
+	Vector3 v = Vector3(v1.y*v2.z - v1.z*v2.z, v1.z*v2.x - v1.x*v2.z, v1.x*v2.y - v1.y*v2.x);
+	return v;
+}
+
+float Vector3::Dot(const Vector3 & v1, const Vector3 & v2)
+{
+	float value = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return value;
+}
+
+Vector3 Vector3::Lerp(const Vector3 & s, const Vector3 & e, float t)
+{
+	return s * (1.0f - t) + e * t;
+}
+
 Vector3 Vector3::operator+()
 {
 	return *this;
@@ -148,7 +225,7 @@ const Vector3 operator*(const Vector3& v, float s)
 	return a *= s;
 }
 
-const Vector3 operator*(float s,const Vector3& v)
+const Vector3 operator*(float s, const Vector3& v)
 {
 	return v * s;
 }
