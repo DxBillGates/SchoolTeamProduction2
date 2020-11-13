@@ -17,6 +17,7 @@ private:
 	bool jumpFlag;
 	bool direction;
 	Bullet bullet;
+	std::vector<Bullet> bullets;
 public:
 	Player();
 	~Player();

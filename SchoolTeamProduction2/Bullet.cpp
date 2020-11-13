@@ -5,7 +5,7 @@ Bullet::Bullet()
 	:
 	hitCount(0)
 {
-	size = Vector3(4, 4, 0);
+	size = Vector3(8, 8, 0);
 }
 
 Bullet::~Bullet()
@@ -106,7 +106,7 @@ void Bullet::Update()
 						else
 						{
 							newVelocity.x = -rigidbody.velocity.y;
-							newVelocity.y = rigidbody.velocity.x;
+							newVelocity.y = -rigidbody.velocity.x;
 						}
 					}
 					transform.position.x -= rigidbody.velocity.x * objectTime;
@@ -173,6 +173,7 @@ void Bullet::Update()
 					++hitCountNowFrame;
 				}
 			}
+
 		}
 
 		//y軸判定
@@ -207,7 +208,7 @@ void Bullet::Update()
 						if (rigidbody.velocity.x > 0)
 						{
 							newVelocity.x = rigidbody.velocity.y;
-							newVelocity.y = -rigidbody.velocity.x;
+							newVelocity.y = rigidbody.velocity.x;
 						}
 						else
 						{
@@ -315,6 +316,7 @@ void Bullet::Update()
 		if (hitCountNowFrame > 0)
 		{
 			++hitCount;
+			newVelocity *= 2.0f;
 		}
 
 		//速度ベクトルの更新

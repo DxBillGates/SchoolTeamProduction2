@@ -27,8 +27,8 @@ void SampleScene::LoadAsset()
 	prototypeMap.LoadMap("Resources/MapChip/map.txt");
 	prototypeMap.LoadAsset(device->GetDevice(), heap, loader);
 
-	particle.LoadAsset(device->GetDevice(), heap, loader);
-	particle.LoadAsset_Mesh(device->GetDevice(), heap, loader);
+	//particle.LoadAsset(device->GetDevice(), heap, loader);
+	//particle.LoadAsset_Mesh(device->GetDevice(), heap, loader);
 }
 
 void SampleScene::Initialize()
@@ -49,7 +49,7 @@ void SampleScene::Initialize()
 	//プロトタイプマップを初期化
 	prototypeMap.Initialize();
 	sceneTime = 0.25f;
-	particle.Initialize();
+	//particle.Initialize();
 }
 
 void SampleScene::Update()
@@ -77,15 +77,13 @@ void SampleScene::Update()
 	//プレイヤーの更新
 	player.Update();
 	//ビュー行列の更新
-	Vector3 playerPos = player.GetBullet()->GetTransform().position;
+	Vector3 playerPos = player.GetTransform().position;
 	eyepos = { playerPos.x,playerPos.y,-1000 };
 	target = { playerPos.x,playerPos.y,0 };
 	view = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&eyepos), DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&up));
 	perspective->Map({ view,projection3D });
 	//printf("シーンの固有時間 : %f\n", sceneTime);
-
-
-	particle.Update();
+	//particle.Update();
 }
 
 void SampleScene::DrawSprite()
@@ -94,11 +92,10 @@ void SampleScene::DrawSprite()
 
 void SampleScene::Draw()
 {
-	particleShader->Set(device->GetCmdList());
-
-	//***ParticleManagerDraw
-	particle.Draw(device->GetCmdList());
-	//***ParticleManagerDraw
+	//particleShader->Set(device->GetCmdList());
+	////***ParticleManagerDraw
+	//particle.Draw(device->GetCmdList());
+	////***ParticleManagerDraw
 
 	//シェーダーのセット
 	basicMeshShader->Set(device->GetCmdList());
