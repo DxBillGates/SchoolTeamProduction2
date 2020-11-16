@@ -23,8 +23,7 @@ void Player::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadCon
 	mesh.Create(device, &meshData);
 	cbData = new Dx12_CBuffer<DirectX::XMMATRIX>(device, heap, 1);
 
-	bullet.LoadAsset(device, heap, loader);
-	bullets.resize(16);
+	bullets.resize(32);
 	for (auto& b : bullets)
 	{
 		b.LoadAsset(device, heap, loader);
@@ -34,13 +33,16 @@ void Player::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadCon
 
 void Player::Initialize()
 {
-	bullet.Initialize();
 	jumpFlag = false;
 	direction = true;
 
 	Vector2 pos = CollisionMap::GetCurrentMap()->GetPlayerChip();
 	transform.position = Vector3(pos.x * size.x + 32.0f, -(pos.y * size.y + 32.0f), 0);
 	objectTime = 1.0f;
+	frameCount = 0;
+	life = 10;
+	invincivleFlag = false;
+	invincivleCount = 0;
 	for (auto& b : bullets)
 	{
 		b.Initialize();
@@ -53,19 +55,9 @@ void Player::Update()
 	const float JUMP_POWER = 16;    //ƒWƒƒƒ“ƒv—Í
 	const float MOVE_POWER = 8;    //ˆÚ“®—Ê
 	const int MAX_HIT_COUNT = 4;    //’e‚ÌÅ‘åƒqƒbƒg”
-	const int DIAGONAL_SHOT_BULLET_NUM = 4;    //ŽÎ‚ß‘Å‚¿‚Ìˆê“x‚Éo‚·—Ê
-
-	rigidbody.velocity.x = 0;
-	if (keyboard->CheakHitKey(Key::A))
-	{
-		rigidbody.velocity += Vector3(-MOVE_POWER, 0, 0);
-		direction = false;
-	}
-	if (keyboard->CheakHitKey(Key::D))
-	{
-		rigidbody.velocity += Vector3(MOVE_POWER, 0, 0);
-		direction = true;
-	}
+	const int DIAGONAL_SHOT_BULLET_NUM = 8;    //ŽÎ‚ß‘Å‚¿‚Ìˆê“x‚Éo‚·—Ê
+	const int INTERVAL = 60;    //’e‚ð”­ŽË‚·‚éŠÔŠu
+	const int INVINCIBLE_TIME = 30;    //–³“GŽžŠÔ
 
 	//ŽÎ‚ß‚¤‚¿
 	if (jumpFlag)
@@ -73,14 +65,19 @@ void Player::Update()
 		if (keyboard->KeyPressTrigger(Key::SPACE))
 		{
 			std::vector<Vector2> bulletvels;
+			std::vector<Vector2> bulletposies;
 			//’e‚ð”ò‚Î‚·•ûŒü‚ðŒvŽZ
 			for (int i = 0; i < DIAGONAL_SHOT_BULLET_NUM; ++i)
 			{
 				Vector2 vel;
+				Vector2 pos;
 				vel.x = sin(DirectX::XM_2PI / DIAGONAL_SHOT_BULLET_NUM * i + 3.14f / 4.0f);
 				vel.y = cos(DirectX::XM_2PI / DIAGONAL_SHOT_BULLET_NUM * i + 3.14f / 4.0f);
+				pos.x = sin(DirectX::XM_2PI / DIAGONAL_SHOT_BULLET_NUM * i + 3.14f / 4.0f) + transform.position.x;
+				pos.y = cos(DirectX::XM_2PI / DIAGONAL_SHOT_BULLET_NUM * i + 3.14f / 4.0f) + transform.position.y;
 				vel = vel.Normalize();
 				bulletvels.emplace_back(vel);
+				bulletposies.emplace_back(pos);
 			}
 
 			for (int i = 0, count = 0; i < (int)bullets.size(); ++i)
@@ -91,12 +88,72 @@ void Player::Update()
 				}
 				if (!bullets[i].GetLiveFlag())
 				{
+					bullets[i].SetTransform({ {bulletposies[count].x,bulletposies[count].y,0},{},{} });
 					bullets[i].SetLiveFlag(true);
 					bullets[i].SetRigidbody({ {bulletvels[count].x,bulletvels[count].y,0} });
 					++count;
 				}
 			}
 		}
+	}
+
+
+	//’eŠÖŒW
+	//’e‚ªŽg‚¦‚È‚¢ó‘Ô‚È‚çƒLƒƒƒ‰‚ÌÀ•W‚ÉŽ‚Á‚Ä‚­‚é
+	//Žg‚¦‚é’e‚È‚çƒLƒƒƒ‰‚ÌŒü‚«‚Ì•ûŒü‚É”ò‚Î‚·
+	for (auto& b : bullets)
+	{
+		if (!b.GetLiveFlag())
+		{
+			if (frameCount % INTERVAL * objectTime == 0)
+			{
+				if (direction)
+				{
+					b.SetTransform({ transform.position + Vector3(48,0,0),{},{} });
+					b.SetRigidbody({ Vector3(4.0f,0,0) });
+				}
+				else
+				{
+					b.SetTransform({ transform.position - Vector3(48,0,0),{},{} });
+					b.SetRigidbody({ Vector3(-4.0f,0,0) });
+				}
+				b.SetLiveFlag(true);
+				break;
+			}
+		}
+	}
+	//’e‚ÌXV
+	for (auto& b : bullets)
+	{
+		if (!b.GetLiveFlag())
+		{
+			b.SetTransform({ transform.position,{},{} });
+		}
+		else
+		{
+			if (b.GetHitCount() > 0)
+			{
+				float distance = Vector3::Distance(transform.position, b.GetTransform().position);
+				if (distance * distance <= size.x * b.GetSize().x)
+				{
+					if (!invincivleFlag)
+					{
+						life -= 0.5f;
+						invincivleFlag = true;
+					}
+						b.SetTransform({ transform.position,{},{} });
+						b.SetRigidbody({ Vector3(0,0,0) });
+						b.Initialize();
+				}
+			}
+		}
+		if (b.GetHitCount() == MAX_HIT_COUNT)
+		{
+			b.SetTransform({ transform.position,{},{} });
+			b.SetRigidbody({ Vector3(0,0,0) });
+			b.Initialize();
+		}
+		b.Update();
 	}
 
 	//ƒWƒƒƒ“ƒvƒtƒ‰ƒO‚ªtrue‚¶‚á‚È‚¢‚Æ‚«‚ÉƒXƒy[ƒXƒL[‚ð‰Ÿ‚·‚ÆƒWƒƒƒ“ƒv
@@ -108,21 +165,17 @@ void Player::Update()
 			rigidbody.velocity.y = JUMP_POWER;
 		}
 	}
-
-
-	for (auto& b : bullets)
+	//ˆÚ“®
+	rigidbody.velocity.x = 0;
+	if (keyboard->CheakHitKey(Key::A))
 	{
-		if (!b.GetLiveFlag())
-		{
-			b.SetTransform({ transform.position,{},{} });
-		}
-		if (b.GetHitCount() == MAX_HIT_COUNT)
-		{
-			b.SetTransform({ transform.position,{},{} });
-			b.SetRigidbody({ Vector3(0,0,0) });
-			b.Initialize();
-		}
-		b.Update();
+		rigidbody.velocity += Vector3(-MOVE_POWER, 0, 0);
+		direction = false;
+	}
+	if (keyboard->CheakHitKey(Key::D))
+	{
+		rigidbody.velocity += Vector3(MOVE_POWER, 0, 0);
+		direction = true;
 	}
 
 	//xŽ²‚ÉˆÚ“®—Ê‚ð‰ÁŽZ‚µˆê“x”»’è
@@ -148,39 +201,38 @@ void Player::Update()
 		rigidbody.velocity.y = 0;
 	}
 
-
-	//’eŠÖŒW
-	//’e‚ªŽg‚¦‚È‚¢ó‘Ô‚È‚çƒLƒƒƒ‰‚ÌÀ•W‚ÉŽ‚Á‚Ä‚­‚é
-	if (!bullet.GetLiveFlag())
+	if (invincivleFlag)
 	{
-		bullet.SetTransform({ {transform.position.x,transform.position.y,0 }, {}, {} });
+		if (invincivleCount > INVINCIBLE_TIME)
+		{
+			invincivleFlag = false;
+			invincivleCount = 0;
+		}
+		++invincivleCount;
 	}
-	//Žg‚¦‚é’e‚È‚çƒLƒƒƒ‰‚ÌŒü‚«‚Ì•ûŒü‚É”ò‚Î‚·
-	if (!bullet.GetLiveFlag())
-	{
-		bullet.SetLiveFlag(true);
-		if (direction)bullet.SetRigidbody({ Vector3(4.0f,0,0) });
-		else bullet.SetRigidbody({ Vector3(-4.0f,0,0) });
-	}
-	if (bullet.GetHitCount() == MAX_HIT_COUNT)
-	{
-		bullet.SetTransform({ transform.position,{},{} });
-		bullet.SetRigidbody({ Vector3(0,0,0) });
-		bullet.Initialize();
-	}
-	bullet.Update();
+	++frameCount;
+	printf("%f\n", life);
 }
 
 void Player::Draw(ID3D12GraphicsCommandList * cmdList)
 {
 	cbData->Map({ DirectX::XMMatrixTranslation(transform.position.x,transform.position.y,transform.position.z) });
 	cbData->Set(cmdList);
-	mesh.Draw(cmdList);
+	if (!invincivleFlag)
+	{
+		mesh.Draw(cmdList);
+	}
+	else
+	{
+		if (invincivleCount % 2)
+		{
+			mesh.Draw(cmdList);
+		}
+	}
 	for (auto& b : bullets)
 	{
 		b.Draw(cmdList);
 	}
-	bullet.Draw(cmdList);
 }
 
 void Player::SetInputDevice(Keyboard * pKeyboard, Xinput * pCtrler)
@@ -189,7 +241,7 @@ void Player::SetInputDevice(Keyboard * pKeyboard, Xinput * pCtrler)
 	ctrler = pCtrler;
 }
 
-GameObject * Player::GetBullet()
+std::vector<Bullet>* Player::GetBullets()
 {
-	return &bullet;
+	return &bullets;
 }

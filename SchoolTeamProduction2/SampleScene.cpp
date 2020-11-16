@@ -54,24 +54,10 @@ void SampleScene::Initialize()
 
 void SampleScene::Update()
 {
-	if (keyboard->CheakHitKey(Key::UP))
-	{
-		sceneTime += 0.01f;
-	}
-	if (keyboard->CheakHitKey(Key::DOWN))
-	{
-		sceneTime -= 0.01f;
-	}
-	if (sceneTime <= 0)
-	{
-		sceneTime = 0.01f;
-	}
 	if (keyboard->CheakHitKey(Key::I))
 	{
 		Initialize();
 	}
-	GameObject* p = player.GetBullet();
-	p->SetObjectTime(sceneTime);
 	//当たり判定を行うマップをセット
 	CollisionMap::SetCurrentMap(&prototypeMap);
 	//プレイヤーの更新

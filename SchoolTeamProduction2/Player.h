@@ -16,8 +16,11 @@ private:
 	Dx12_CBuffer<DirectX::XMMATRIX>* cbData;
 	bool jumpFlag;
 	bool direction;
-	Bullet bullet;
 	std::vector<Bullet> bullets;
+	float life;
+	int frameCount;
+	bool invincivleFlag;
+	int invincivleCount;
 public:
 	Player();
 	~Player();
@@ -26,5 +29,5 @@ public:
 	void Update();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void SetInputDevice(Keyboard* pKeyboard, Xinput* pCtrler);
-	GameObject* GetBullet();
+	std::vector<Bullet>* GetBullets();
 };
