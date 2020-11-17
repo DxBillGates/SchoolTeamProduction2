@@ -4,6 +4,6 @@ VSOutput main(float4 pos : POSITION, float2 uv : TEXCOORD, float3 normal : NORMA
 	VSOutput output;
 	output.svpos = mul(projection3d, mul(view, mul(world, pos)));
 	output.uv = uv;
-	output.normal = normal;
+	output.normal = mul(projection3d, mul(view, mul(world, float4(normal.xyz,0)))).xyz;
 	return output;
 }

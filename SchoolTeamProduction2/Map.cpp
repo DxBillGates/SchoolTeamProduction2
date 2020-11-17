@@ -46,6 +46,16 @@ void Map::LoadMap(const char * fileName)
 				enemiesChip2.push_back(Vector2((float)mapChipData[lineNumber].size() - 1, (float)lineNumber));
 				mapChipData[lineNumber][mapChipData[lineNumber].size() - 1] = AIR;
 			}
+			else if (number == (int)CHECK_POINT)
+			{
+				checkPointChip.push_back(Vector2((float)mapChipData[lineNumber].size() - 1, (float)lineNumber));
+				mapChipData[lineNumber][mapChipData[lineNumber].size() - 1] = AIR;
+			}
+			else if (number == (int)COIN)
+			{
+				coinChip.push_back(Vector2((float)mapChipData[lineNumber].size() - 1, (float)lineNumber));
+				mapChipData[lineNumber][mapChipData[lineNumber].size() - 1] = AIR;
+			}
 		}
 		++lineNumber;
 	}
@@ -64,6 +74,16 @@ std::vector<Vector2> Map::GetEnemiesChip()
 std::vector<Vector2> Map::GetMoveEnemiesChip()
 {
 	return enemiesChip2;
+}
+
+std::vector<Vector2> Map::GetCheckPointChips()
+{
+	return checkPointChip;
+}
+
+std::vector<Vector2> Map::GetCoinChips()
+{
+	return coinChip;
 }
 
 std::vector<std::vector<int>>* Map::GetMapChipPointer()

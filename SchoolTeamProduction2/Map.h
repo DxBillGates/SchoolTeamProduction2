@@ -17,6 +17,10 @@ enum MapChipData
 	ENEMY,
 	MOVE_ENEMY,
 	PLAYER,
+	NOT_REFLECT_BLOCK,
+	CHECK_POINT,
+	BOSS,
+	COIN,
 };
 
 //基底クラス
@@ -26,6 +30,8 @@ protected:
 	Vector2 playerChip;
 	std::vector<Vector2> enemiesChip;
 	std::vector<Vector2> enemiesChip2;
+	std::vector<Vector2> checkPointChip;
+	std::vector<Vector2> coinChip;
 	//マップチップデータ
 	std::vector<std::vector<int>> mapChipData;
 	Vector3 size;
@@ -42,6 +48,8 @@ public:
 	Vector2 GetPlayerChip();
 	std::vector<Vector2> GetEnemiesChip();
 	std::vector<Vector2> GetMoveEnemiesChip();
+	std::vector<Vector2> GetCheckPointChips();
+	std::vector<Vector2> GetCoinChips();
 	std::vector<std::vector<int>>* GetMapChipPointer();    //マップチップのポインタを返す
 	std::vector<std::vector<int>> GetMapChipData();    //マップチップのデータを返す
 	Vector3 GetChipSize();    //チップ一つのサイズを返す

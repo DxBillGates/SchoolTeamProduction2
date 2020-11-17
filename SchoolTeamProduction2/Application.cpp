@@ -96,8 +96,8 @@ bool Application::Update()
 void Application::Draw()
 {
 	device.ClearScreen({ 0.0f,0.0f,0.0f,0 });
-	sceneManager.Draw();
 	sceneManager.DrawSprite();
+	sceneManager.Draw();
 	device.ScreecFlip();
 }
 

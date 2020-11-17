@@ -123,7 +123,19 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>GameObject\ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="PrototypeMap2.cpp">
+      <Filter>Map\ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Particle.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CoinManager.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckPoint.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,15 +227,33 @@
     <ClInclude Include="Particle.h">
       <Filter>GameObject\ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="AnimetinStruct.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="PrototypeMap2.h">
+      <Filter>Map\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CoinManager.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckPoint.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicMeshShader.hlsli" />
     <None Include="ParticleShader.hlsli" />
+    <None Include="TextureAnimetionShader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicMeshVS.hlsl" />
     <FxCompile Include="BasicMeshPS.hlsl" />
     <FxCompile Include="ParticleVS.hlsl" />
     <FxCompile Include="ParticlePS.hlsl" />
+    <FxCompile Include="TextureAnimetionVS.hlsl" />
+    <FxCompile Include="TextureAnimetionPS.hlsl" />
   </ItemGroup>
 </Project>
