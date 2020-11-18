@@ -25,17 +25,18 @@ void Coin::Initialize()
 void Coin::Update()
 {
 	angleY += 0.01f;
-	cbData->Map({ DirectX::XMMatrixScaling(size.x/2,size.y/2,size.z/2) * DirectX::XMMatrixRotationY(angleY) * DirectX::XMMatrixTranslation(transform.position.x,transform.position.y,transform.position.z) });
+	cbData->Map({ DirectX::XMMatrixScaling(0.5f,0.5f,0.5f) * DirectX::XMMatrixRotationY(angleY) * DirectX::XMMatrixTranslation(transform.position.x,transform.position.y,transform.position.z) });
 }
 
 void Coin::Draw(ID3D12GraphicsCommandList * cmdList)
 {
 	cbData->Set(cmdList);
+	cmdList->SetGraphicsRootDescriptorTable(2, cbData->GetHeap()->GetSRVHandleForGPU(meshData.materialData.texture->GetSRVNumber()));
 	mesh.Draw(cmdList);
 }
 
 void Coin::StaticLoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadContents * loader)
 {
-	loader->LoadMeshData("Resources/Model/", "COIN", meshData);
+	loader->LoadMeshData("Resources/Model/coin/", "coin", meshData);
 	mesh.Create(device, &meshData);
 }

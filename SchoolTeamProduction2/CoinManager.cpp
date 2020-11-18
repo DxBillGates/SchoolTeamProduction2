@@ -3,17 +3,16 @@
 
 CoinManager::CoinManager()
 {
-	coins.resize(3);
+	coins.resize(10);
 }
 
 CoinManager::~CoinManager()
 {
-	coins.clear();
+	//coins.clear();
 }
 
 void CoinManager::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadContents * loader)
 {
-	Coin::StaticLoadAsset(device, heap, loader);
 	for (auto& c : coins)
 	{
 		c.LoadAsset(device, heap, loader);
@@ -23,17 +22,19 @@ void CoinManager::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, Lo
 
 void CoinManager::Initialize()
 {
-	const std::vector<Vector2>& coinChips = CollisionMap::GetCurrentMap()->GetCoinChips();
-	const Vector3& size = coins[0].GetSize();
-	for (int i = 0; i < (int)coinChips.size(); ++i)
-	{
-		if ((int)coins.size() < (int)coinChips.size())
-		{
-			assert(0);
-		}
-		coins[i].SetTransform({ Vector3(coinChips[i].x * size.x + size.x / 2,-(coinChips[i].y * size.y + size.y / 2),0),{}, {} });
-		coins[i].Initialize();
-	}
+	//static int index = 0;
+	//const std::vector<Vector2>& coinChips = CollisionMap::GetCurrentMap()->GetCoinChips();
+	//const Vector3& size = coins[0].GetSize();
+	//for (int i = 0; i < (int)coinChips.size(); ++i)
+	//{
+	//	if ((int)coins.size() < (int)coinChips.size())
+	//	{
+	//		assert(0);
+	//	}
+	//	coins[i].SetTransform({ Vector3(coinChips[i].x * size.x + size.x / 2,-(coinChips[i].y * size.y + size.y / 2),0),{}, {} });
+	//	coins[i].Initialize();
+	//}
+
 }
 
 void CoinManager::Update()

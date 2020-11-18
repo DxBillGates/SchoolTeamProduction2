@@ -1,5 +1,11 @@
 #include "CollisionMap.h"
 Map* CollisionMap::currentMap = nullptr;
+CollisionMap::CollisionMap()
+{
+}
+CollisionMap::~CollisionMap()
+{
+}
 void CollisionMap::SetCurrentMap(Map * pMap)
 {
 	currentMap = pMap;
@@ -155,4 +161,50 @@ bool CollisionMap::CollisionCheckTriangleAndGameObject(GameObject & gameObject, 
 	//{
 	//	return false;
 	//}
+}
+
+bool CollisionMap::CollisionCheckTriangleAndRectangle(GameObject & gameObject, Vector3 a, Vector3 b, Vector3 c)
+{
+	Vector3 gPos = gameObject.GetTransform().position;
+	Vector3 gSize = gameObject.GetSize();
+	Vector3 rt, rb, lt, lb;
+	rt = Vector3(gPos.x + gSize.x / 2.5f, gPos.y + gSize.y / 2.5f, 0);
+	rb = Vector3(gPos.x + gSize.x / 2.5f, gPos.y - gSize.y / 2.5f, 0);
+	lt = Vector3(gPos.x - gSize.x / 2.5f, gPos.y + gSize.y / 2.5f, 0);
+	lb = Vector3(gPos.x - gSize.x / 2.5f, gPos.y - gSize.y / 2.5f, 0);
+
+	float abao, bcbo, caco;
+	abao = (b.x - a.x)*(rt.y - a.y) - (b.y - a.y)*(rt.x - a.x);
+	bcbo = (c.x - b.x)*(rt.y - b.y) - (c.y - b.y)*(rt.x - b.x);
+	caco = (a.x - c.x)*(rt.y - c.y) - (a.y - c.y)*(rt.x - c.x);
+	if (abao > 0 && bcbo > 0 && caco > 0 || abao < 0 && bcbo < 0 && caco < 0)
+	{
+		return true;
+	}
+
+	abao = (b.x - a.x)*(rb.y - a.y) - (b.y - a.y)*(rb.x - a.x);
+	bcbo = (c.x - b.x)*(rb.y - b.y) - (c.y - b.y)*(rb.x - b.x);
+	caco = (a.x - c.x)*(rb.y - c.y) - (a.y - c.y)*(rb.x - c.x);
+	if (abao > 0 && bcbo > 0 && caco > 0 || abao < 0 && bcbo < 0 && caco < 0)
+	{
+		return true;
+	}
+
+	abao = (b.x - a.x)*(lt.y - a.y) - (b.y - a.y)*(lt.x - a.x);
+	bcbo = (c.x - b.x)*(lt.y - b.y) - (c.y - b.y)*(lt.x - b.x);
+	caco = (a.x - c.x)*(lt.y - c.y) - (a.y - c.y)*(lt.x - c.x);
+	if (abao > 0 && bcbo > 0 && caco > 0 || abao < 0 && bcbo < 0 && caco < 0)
+	{
+		return true;
+	}
+
+	abao = (b.x - a.x)*(lt.y - a.y) - (b.y - a.y)*(lt.x - a.x);
+	bcbo = (c.x - b.x)*(lt.y - b.y) - (c.y - b.y)*(lt.x - b.x);
+	caco = (a.x - c.x)*(lt.y - c.y) - (a.y - c.y)*(lt.x - c.x);
+	if (abao > 0 && bcbo > 0 && caco > 0 || abao < 0 && bcbo < 0 && caco < 0)
+	{
+		return true;
+	}
+
+	return false;
 }

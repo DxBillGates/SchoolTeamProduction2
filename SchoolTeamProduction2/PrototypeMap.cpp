@@ -33,9 +33,6 @@ void PrototypeMap::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, L
 	}
 
 	//マップチップ用のメッシュを生成
-	MeshData mapChipMeshData = {};
-	loader->CreateModelData_Plane(size.x, size.y, mapChipMeshData);
-	mapChipMesh.Create(device, &mapChipMeshData);
 
 	MeshData urData = {};
 	loader->LoadMeshData("Resources/Model/", "UP_RIGHT_BLOCK",urData);
@@ -53,14 +50,32 @@ void PrototypeMap::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, L
 	loader->LoadMeshData("Resources/Model/", "CUBE", cubeData);
 	cubeMesh.Create(device, &cubeData);
 
+	coinManager.LoadAsset(device, heap, loader);
 }
 
 void PrototypeMap::Initialize()
 {
+	std::vector<Coin>* pCoins = coinManager.GetCoins();
+	Vector3 coinSize = (*pCoins)[0].GetSize();
+
+	for (int i = 0; i < (int)coinChip.size();++i)
+	{
+		if ((*pCoins)[i].GetLiveFlag())
+		{
+			(*pCoins)[i].SetTransform({ {coinChip[i].x * coinSize.x + coinSize.x / 2,-(coinChip[i].y* coinSize.y + coinSize.y / 2),0} , {},{} });
+		}
+	}
+
+	for (int i = (int)coinChip.size(); i < (int)pCoins->size(); ++i)
+	{
+		(*pCoins)[i].SetLiveFlag(false);
+	}
 }
 
 void PrototypeMap::Draw(ID3D12GraphicsCommandList * cmdList)
 {
+	coinManager.Update();
+	coinManager.Draw(cmdList);
 	//マップチップの定数バッファ分描画
 	for (int i = 0, index = 0; i < (int)mapChipData.size(); ++i)
 	{
@@ -72,25 +87,38 @@ void PrototypeMap::Draw(ID3D12GraphicsCommandList * cmdList)
 				break;
 			case MapChipData::GLASS:
 				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(cGrassTex->GetSRVNumber()));
 				cubeMesh.Draw(cmdList);
 				break;
 			case MapChipData::GROUND:
+				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(cGroundTex->GetSRVNumber()));
+				cubeMesh.Draw(cmdList);
 				break;
 			case MapChipData::UP_LEFT_SLOPE:
 				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(hGrassTex->GetSRVNumber()));
 				upRightMesh.Draw(cmdList);
 				break;
 			case MapChipData::UP_RIGHT_SLOPE:
 				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(hGrassTex->GetSRVNumber()));
 				upLeftMesh.Draw(cmdList);
 				break;
 			case MapChipData::DOWN_LEFT_SLOPE:
 				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(hGrassTex->GetSRVNumber()));
 				downRightMesh.Draw(cmdList);
 				break;
 			case MapChipData::DOWN_RIGHT_SLOPE:
 				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(hGrassTex->GetSRVNumber()));
 				downLeftMesh.Draw(cmdList);
+				break;
+			case MapChipData::NOT_REFLECT_BLOCK:
+				mapCBData[index]->Set(cmdList);
+				cmdList->SetGraphicsRootDescriptorTable(2, mapCBData[0]->GetHeap()->GetSRVHandleForGPU(cStoneTex->GetSRVNumber()));
+				cubeMesh.Draw(cmdList);
 				break;
 			}
 		}

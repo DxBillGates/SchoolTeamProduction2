@@ -135,8 +135,20 @@
     <ClCompile Include="CoinManager.cpp">
       <Filter>GameObject\ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveEnemy.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootEnemy.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="CheckPoint.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>GameObject\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>GameObject\ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,11 +254,24 @@
     <ClInclude Include="CheckPoint.h">
       <Filter>GameObject\ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ShootEnemy.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveEnemy.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>GameObject\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicMeshShader.hlsli" />
     <None Include="ParticleShader.hlsli" />
     <None Include="TextureAnimetionShader.hlsli" />
+    <None Include="ModelShader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicMeshVS.hlsl" />
@@ -255,5 +280,7 @@
     <FxCompile Include="ParticlePS.hlsl" />
     <FxCompile Include="TextureAnimetionVS.hlsl" />
     <FxCompile Include="TextureAnimetionPS.hlsl" />
+    <FxCompile Include="ModelVS.hlsl" />
+    <FxCompile Include="ModelPS.hlsl" />
   </ItemGroup>
 </Project>

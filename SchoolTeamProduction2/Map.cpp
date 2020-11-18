@@ -3,6 +3,12 @@
 #include<sstream>
 #include<string>
 
+Dx12_Texture2D*	Map::cGrassTex = nullptr;
+Dx12_Texture2D*	Map::cGroundTex = nullptr;
+Dx12_Texture2D*	Map::cStoneTex = nullptr;
+Dx12_Texture2D*	Map::hGrassTex = nullptr;
+Dx12_Texture2D*	Map::hGroundTex = nullptr;
+Dx12_Texture2D* Map::hStoneTex = nullptr;
 Map::Map()
 {
 }
@@ -115,6 +121,11 @@ MapChipData Map::GetMapChipNumber(int x, int y)
 	return (MapChipData)mapChipData[y][x];
 }
 
+CoinManager * Map::GetCoinManager()
+{
+	return &coinManager;
+}
+
 void Map::SetMapChip(int x, int y, MapChipData number)
 {
 	mapChipData[y][x] = (int)number;
@@ -123,4 +134,24 @@ void Map::SetMapChip(int x, int y, MapChipData number)
 void Map::SetSize(Vector3 size)
 {
 	this->size = size;
+}
+
+void Map::StaticLoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadContents * loader)
+{
+	cGrassTex = loader->LoadTexture("Resources/Texture/", "cGrass.png");
+	cGroundTex = loader->LoadTexture("Resources/Texture/", "cGround2.png");
+	cStoneTex = loader->LoadTexture("Resources/Texture/", "cStone3.png");
+	hGroundTex = loader->LoadTexture("Resources/Texture/", "hGround1.png");
+	hStoneTex = loader->LoadTexture("Resources/Texture/", "hStone1.png");
+	hGrassTex = loader->LoadTexture("Resources/Texture/", "hGrass1.png");
+}
+
+void Map::StaticDeleteAsset()
+{
+	delete cGrassTex;
+	delete cGroundTex;
+	delete cStoneTex;
+	delete hGroundTex;
+	delete hStoneTex;
+	delete hGrassTex;
 }

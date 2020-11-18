@@ -13,17 +13,21 @@ Player::~Player()
 {
 	delete cbData;
 	delete hpTex;
+	delete bTex;
 	for (auto& h : hpCBDatas)
 	{
 		delete h;
+	}
+	for (auto& b : barriarCBDatas)
+	{
+		delete b;
 	}
 }
 
 void Player::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadContents * loader)
 {
 	//メッシュデータのロード
-	MeshData meshData = {};
-	loader->LoadMeshData("Resources/Model/", "player",meshData);
+	loader->LoadMeshData("Resources/Model/player/", "player", meshData);
 	//loader->CreateModelData_Plane(size.x, size.y, meshData);
 	//メッシュの生成
 	mesh.Create(device, &meshData);
@@ -36,19 +40,27 @@ void Player::LoadAsset(ID3D12Device * device, Dx12_CBVSRVUAVHeap * heap, LoadCon
 	}
 
 	SpriteData spriteData = {};
-	loader->CreateModelData_Plane(64, 64, spriteData);
+	loader->CreateModelData_Plane(32, 32, spriteData);
 	hpSprite.Create(device, &spriteData);
-	hpTex = loader->LoadTexture("Resources/Texture/", "ハート.png");
+	hpTex = loader->LoadTexture("Resources/Texture/", "heart.png");
+	bTex = loader->LoadTexture("Resources/Texture/", "barriar.png");
 	const int MAX_HP = 10;
 	hpCBDatas.resize(MAX_HP);
 	for (int i = 0; i < MAX_HP; ++i)
 	{
 		hpCBDatas[i] = new Dx12_CBuffer<AnimetionData>(device, heap, 1);
 	}
+	const int MAX_BARRIAR = 10;
+	barriarCBDatas.resize(MAX_BARRIAR);
+	for (auto& b : barriarCBDatas)
+	{
+		b = new Dx12_CBuffer<AnimetionData>(device, heap, 1);
+	}
 }
 
 void Player::Initialize()
 {
+	const int MAX_BARRIAR = 10;
 	const int MAX_HP = 10;
 	jumpFlag = false;
 	direction = true;
@@ -65,17 +77,22 @@ void Player::Initialize()
 		b.Initialize();
 	}
 	angleY = 3.14f;
+	barriar = 10;
+	chargeBarriarFlag = false;
+	chargeBarriarIntervalCount = 0;
 }
 
 void Player::Update()
 {
+	const int MAX_BARRIAR = 10;
 	const float G = 0.8f;    //重力
 	const float JUMP_POWER = 16;    //ジャンプ力
 	const float MOVE_POWER = 8;    //移動量
-	const int MAX_HIT_COUNT = 4;    //弾の最大ヒット数
+	const int MAX_HIT_COUNT = 2;    //弾の最大ヒット数
 	const int DIAGONAL_SHOT_BULLET_NUM = 8;    //斜め打ちの一度に出す量
 	const int INTERVAL = 60;    //弾を発射する間隔
 	const int INVINCIBLE_TIME = 30;    //無敵時間
+	const int CHARGE_BARRIAR_INTERVAL = 30;
 	Vector2 hpTexSize = Vector2((float)hpTex->GetMetadata()->width, (float)hpTex->GetMetadata()->height);
 	rigidbody.velocity.x = 0;
 
@@ -84,7 +101,7 @@ void Player::Update()
 		//斜めうち
 		if (jumpFlag)
 		{
-			if (keyboard->KeyPressTrigger(Key::SPACE))
+			if (keyboard->KeyPressTrigger(Key::SPACE) || ctrler->CheckHitKeyTrigger(XinputPadKey::XINPUT_A))
 			{
 				std::vector<Vector2> bulletvels;
 				std::vector<Vector2> bulletposies;
@@ -160,7 +177,25 @@ void Player::Update()
 					{
 						if (!invincivleFlag)
 						{
-							life -= 0.5f;
+							if (barriar <= 0)
+							{
+								life -= 0.5f;
+							}
+							else
+							{
+								if (!chargeBarriarFlag)
+								{
+									barriar -= 1.0f;
+								}
+								else
+								{
+									life -= 0.5f;
+								}
+							}
+							if (barriar <= 0)
+							{
+								chargeBarriarFlag = true;
+							}
 							invincivleFlag = true;
 							rigidbody.velocity += b.GetRigidbody().velocity + Vector3(0, 8, 0);
 
@@ -181,7 +216,7 @@ void Player::Update()
 		}
 
 		//ジャンプフラグがtrueじゃないときにスペースキーを押すとジャンプ
-		if (keyboard->CheakHitKey(Key::SPACE))
+		if (keyboard->CheakHitKey(Key::SPACE) || ctrler->CheckHitKey(XinputPadKey::XINPUT_A))
 		{
 			if (!jumpFlag)
 			{
@@ -190,13 +225,13 @@ void Player::Update()
 			}
 		}
 		//移動
-		if (keyboard->CheakHitKey(Key::A))
+		if (keyboard->CheakHitKey(Key::A) || ctrler->CheckHitKey(XinputPadKey::XINPUT_LEFT))
 		{
 			rigidbody.velocity += Vector3(-MOVE_POWER, 0, 0);
 			angleY = 0;
 			direction = false;
 		}
-		if (keyboard->CheakHitKey(Key::D))
+		if (keyboard->CheakHitKey(Key::D) || ctrler->CheckHitKey(XinputPadKey::XINPUT_RIGHT))
 		{
 			rigidbody.velocity += Vector3(MOVE_POWER, 0, 0);
 			angleY = 3.14f;
@@ -208,7 +243,7 @@ void Player::Update()
 		//x軸に移動量を加算し一度判定
 		//当たっていたら加算をなかったことにする
 		transform.position.x += rigidbody.velocity.x * objectTime;
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
+		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS) || CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GROUND))
 		{
 			transform.position.x -= rigidbody.velocity.x * objectTime;
 			rigidbody.velocity.x = 0;
@@ -218,7 +253,7 @@ void Player::Update()
 		//y軸に移動量を加算しもう一度判定
 		//当たっていたら加算をなかったことにする
 		transform.position.y += rigidbody.velocity.y * objectTime;
-		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
+		if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS) || CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GROUND))
 		{
 			transform.position.y -= rigidbody.velocity.y * objectTime;
 			if (jumpFlag && rigidbody.velocity.y < 0)
@@ -227,7 +262,6 @@ void Player::Update()
 			}
 			rigidbody.velocity.y = 0;
 		}
-
 		if (invincivleFlag)
 		{
 			if (invincivleCount > INVINCIBLE_TIME)
@@ -238,7 +272,6 @@ void Player::Update()
 			++invincivleCount;
 		}
 		++frameCount;
-		printf("%f\n", life);
 
 		//ライフオブジェクトのuvなどの更新
 		for (int i = 0; i < (int)hpCBDatas.size(); ++i)
@@ -256,7 +289,39 @@ void Player::Update()
 			{
 				ancerpoint = 1;
 			}
-			hpCBDatas[i]->Map({ DirectX::XMMatrixTranslation(i * 64.0f,0,0),{ancerpoint,0,hpTexSize.y,hpTexSize.y},{hpTexSize.x,hpTexSize.y,0,0} });
+			hpCBDatas[i]->Map({ DirectX::XMMatrixTranslation(i * 32.0f,640,0),{ancerpoint,0,hpTexSize.y,hpTexSize.y},{hpTexSize.x,hpTexSize.y,0,0} });
+		}
+		if (chargeBarriarFlag)
+		{
+			if (chargeBarriarIntervalCount == CHARGE_BARRIAR_INTERVAL)
+			{
+				chargeBarriarIntervalCount = 0;
+				barriar += 0.5f;
+				if (barriar >= MAX_BARRIAR)
+				{
+					barriar = MAX_BARRIAR;
+					chargeBarriarFlag = false;
+				}
+			}
+			++chargeBarriarIntervalCount;
+		}
+		//ライフオブジェクトのuvなどの更新
+		for (int i = 0; i < (int)barriarCBDatas.size(); ++i)
+		{
+			float ancerpoint = barriar - i;
+			if (ancerpoint >= 1)
+			{
+				ancerpoint = 0;
+			}
+			else if (ancerpoint <= 0)
+			{
+				ancerpoint = 2;
+			}
+			else
+			{
+				ancerpoint = 1;
+			}
+			barriarCBDatas[i]->Map({ DirectX::XMMatrixTranslation(i * 32.0f,640 + 32,0),{ancerpoint,0,hpTexSize.y,hpTexSize.y},{hpTexSize.x,hpTexSize.y,0,0} });
 		}
 	}
 
@@ -274,6 +339,13 @@ void Player::DrawSprite(ID3D12GraphicsCommandList * cmdList, Dx12_CBVSRVUAVHeap*
 		t->Set(cmdList);
 		hpSprite.Draw(cmdList);
 	}
+
+	cmdList->SetGraphicsRootDescriptorTable(2, heap->GetSRVHandleForGPU(bTex->GetSRVNumber()));
+	for (auto& t : barriarCBDatas)
+	{
+		t->Set(cmdList);
+		hpSprite.Draw(cmdList);
+	}
 }
 
 void Player::Draw(ID3D12GraphicsCommandList * cmdList)
@@ -281,6 +353,7 @@ void Player::Draw(ID3D12GraphicsCommandList * cmdList)
 	const int INVINCIBLE_FRAME = 5;    //点滅するフレーム = INVINCIBLE_TIME / INVINCIBLE_FRAME;
 	cbData->Map({ DirectX::XMMatrixScaling(0.5f,0.5f,0.5f) * DirectX::XMMatrixRotationY(angleY) * DirectX::XMMatrixTranslation(transform.position.x,transform.position.y,transform.position.z) });
 	cbData->Set(cmdList);
+	cmdList->SetGraphicsRootDescriptorTable(2, cbData->GetHeap()->GetSRVHandleForGPU(meshData.materialData.texture->GetSRVNumber()));
 	if (!invincivleFlag)
 	{
 		mesh.Draw(cmdList);
@@ -307,4 +380,9 @@ void Player::SetInputDevice(Keyboard * pKeyboard, Xinput * pCtrler)
 std::vector<Bullet>* Player::GetBullets()
 {
 	return &bullets;
+}
+
+void Player::DamageHP(float a)
+{
+	life -= a;
 }

@@ -5,7 +5,7 @@ Bullet::Bullet()
 	:
 	hitCount(0)
 {
-	size = Vector3(8, 8, 0);
+	size = Vector3(16, 16, 0);
 }
 
 Bullet::~Bullet()
@@ -45,7 +45,7 @@ void Bullet::Update()
 		if (!CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::AIR))
 		{
 			//1番チップと当たっている場合はベクトルを反転させる
-			if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
+			if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS) || CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GROUND))
 			{
 				transform.position.x -= rigidbody.velocity.x * objectTime;
 				newVelocity.x = -rigidbody.velocity.x;
@@ -182,7 +182,7 @@ void Bullet::Update()
 		if (!CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::AIR))
 		{
 			//1番チップと当たっている場合はベクトルを反転させる
-			if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS))
+			if (CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GLASS) || CollisionMap::CollisionCheckMapChipAndGameObjectFourCorner(*this, MapChipData::GROUND))
 			{
 				transform.position.y -= rigidbody.velocity.y * objectTime;
 				newVelocity.y = -rigidbody.velocity.y;

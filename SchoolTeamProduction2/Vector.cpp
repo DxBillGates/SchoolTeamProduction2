@@ -16,6 +16,10 @@ float Vector2::Length()
 
 Vector2 Vector2::Normalize()
 {
+	if (Length() == 0)
+	{
+		Vector2();
+	}
 	return *this / Length();
 }
 
@@ -28,6 +32,10 @@ float Vector2::Distance(const Vector2 & v1, const Vector2 & v2)
 Vector2 Vector2::Normalize(const Vector2 & v)
 {
 	Vector2 v1 = v;
+	if (v1.Length() == 0)
+	{
+		return Vector2();
+	}
 	return v1 / v1.Length();
 }
 
@@ -133,18 +141,26 @@ float Vector3::Length()
 
 Vector3 Vector3::Normalize()
 {
+	if (Length() == 0)
+	{
+		return Vector3();
+	}
 	return *this / Length();
 }
 
 float Vector3::Distance(const Vector3 & v1, const Vector3 & v2)
 {
 	Vector3 v = v1 - v2;
-	return v.Length();;
+	return v.Length();
 }
 
 Vector3 Vector3::Normalize(const Vector3 & v)
 {
 	Vector3 v1 = v;
+	if (v1.Length() == 0)
+	{
+		return Vector3();
+	}
 	return v1 / v1.Length();
 }
 

@@ -15,7 +15,9 @@ private:
 	Keyboard* keyboard;
 	Xinput* ctrler;
 private:
+
 	Dx12_Mesh mesh;
+	MeshData meshData;
 	Dx12_CBuffer<DirectX::XMMATRIX>* cbData;
 	bool jumpFlag;
 	bool direction;
@@ -26,9 +28,16 @@ private:
 	int invincivleCount;
 	float angleY;
 
+
 	Dx12_Sprite hpSprite;
 	Dx12_Texture2D* hpTex;
 	std::vector<Dx12_CBuffer<AnimetionData>*> hpCBDatas;
+
+	float barriar;
+	bool chargeBarriarFlag;
+	int chargeBarriarIntervalCount;
+	Dx12_Texture2D* bTex;
+	std::vector<Dx12_CBuffer<AnimetionData>*> barriarCBDatas;
 public:
 	Player();
 	~Player();
@@ -39,4 +48,5 @@ public:
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	void SetInputDevice(Keyboard* pKeyboard, Xinput* pCtrler);
 	std::vector<Bullet>* GetBullets();
+	void DamageHP(float a);
 };

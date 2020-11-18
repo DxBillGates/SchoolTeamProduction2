@@ -4,6 +4,7 @@
 #include"Vector.h"
 #include<d3d12.h>
 #include<vector>
+#include"CoinManager.h"
 
 enum MapChipData
 {
@@ -35,6 +36,14 @@ protected:
 	//マップチップデータ
 	std::vector<std::vector<int>> mapChipData;
 	Vector3 size;
+
+	static Dx12_Texture2D* cGrassTex;
+	static Dx12_Texture2D* cGroundTex;
+	static Dx12_Texture2D* cStoneTex;
+	static Dx12_Texture2D* hGroundTex;
+	static Dx12_Texture2D* hStoneTex;
+	static Dx12_Texture2D* hGrassTex;
+	CoinManager coinManager;
 public:
 	Map();
 	virtual ~Map();
@@ -55,7 +64,10 @@ public:
 	Vector3 GetChipSize();    //チップ一つのサイズを返す
 	Vector2 GetMapSize();    //マップのサイズを返す
 	MapChipData GetMapChipNumber(int x, int y);    //指定チップの情報を返す
+	CoinManager* GetCoinManager();
 	void SetMapChip(int x, int y, MapChipData number = AIR);    //指定チップを変更
 	void SetSize(Vector3 size);    //チップのサイズを変更
+	static void StaticLoadAsset(ID3D12Device* device, Dx12_CBVSRVUAVHeap* heap, LoadContents* loader);
+	static void StaticDeleteAsset();
 };
 

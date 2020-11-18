@@ -15,6 +15,7 @@ public:
 	Dx12_CBuffer(ID3D12Device* pDevice,Dx12_CBVSRVUAVHeap* heap,int rangeNumber);		//param1 ID3D12Device* ,param2 cbvHeap
 	~Dx12_CBuffer();
 	void Map(const T& mappinData);
+	Dx12_CBVSRVUAVHeap* GetHeap();
 	int GetCbvNumber();
 	int GetRangeNumber();
 	void Set(ID3D12GraphicsCommandList* pCmdList);
@@ -65,6 +66,12 @@ inline void Dx12_CBuffer<T>::Map(const T& mappinData)
 	buffer->Map(0, nullptr, (void**)&cbMap);
 	*cbMap = mappinData;
 	buffer->Unmap(0, nullptr);
+}
+
+template<typename T>
+inline Dx12_CBVSRVUAVHeap * Dx12_CBuffer<T>::GetHeap()
+{
+	return pHeap;
 }
 
 
